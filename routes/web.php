@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\MonsterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -29,11 +30,9 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-Route::get('monster/{id}', function (int $id) {
-    return view('monster', [
-        'id' => $id
-    ]);
-})->name('monster');
+Route::resource('monster', MonsterController::class);
+Route::get('/monster/detail', [MonsterController::class, 'show']);
+Route::get('/monster', [MonsterController::class, 'index']);
 
 Route::get('/test', function () {
     return view('test-auth');
