@@ -15,14 +15,12 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->foreignId('species_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+
             $table->string('name', 100);
             $table->string('thumbnail', 255);
             $table->longText('description');
-            $table->unsignedInteger('species_id');
-            $table->unsignedInteger('user_id');
-
-            $table->foreign('species_id')->references('id')->on('species')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -30,9 +30,9 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-Route::resource('monster', MonsterController::class);
-Route::get('/monster/detail', [MonsterController::class, 'show']);
-Route::get('/monster', [MonsterController::class, 'index']);
+Route::resource('/monster', MonsterController::class);
+//Route::get('/monster/detail', [MonsterController::class, 'show']);
+//Route::get('/monster', [MonsterController::class, 'index']);
 
 Route::get('/test', function () {
     return view('test-auth');

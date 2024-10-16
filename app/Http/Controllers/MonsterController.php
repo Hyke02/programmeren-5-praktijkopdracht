@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Monster;
+use App\Models\Species;
 use Illuminate\Http\Request;
 
 class MonsterController extends Controller
@@ -10,11 +11,19 @@ class MonsterController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $monster = Monster::all();
+        $species = Species::all();
 
-        return view('monster.index', compact('monster'));
+        $monsters = Monster::query();
+
+        if ($request->filled('species_id')) {
+            $monsters->where('species_id', $request->species_id);
+        }
+
+        $monsters = $monsters->with('species')->get();
+
+        return view('monster.index', compact('monsters', 'species'));
     }
 
     /**
@@ -22,7 +31,7 @@ class MonsterController extends Controller
      */
     public function create()
     {
-        //
+        return view('monster.create');
     }
 
     /**
@@ -30,7 +39,18 @@ class MonsterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $monster = new Monster();
+
+        $monster->name = $request->input('name');
+        $monster->description = $request->input('description');
+        $monster->thumbnail = $request->input('thumbnail');
+
+        $monster->species_id = 20;
+        $monster->user_id = 20;
+
+        $monster->save();
+
+        return redirect()->route('monster.index');
     }
 
     /**
@@ -38,7 +58,7 @@ class MonsterController extends Controller
      */
     public function show(string $id)
     {
-        $monster = Monster::find(3);
+        $monster = Monster::find($id);
 
         return view('monster.show', compact('monster'));
     }
@@ -48,7 +68,9 @@ class MonsterController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $monster = Monster::find($id);
+
+        return view('monster.edit', compact('monster'));
     }
 
     /**
@@ -56,7 +78,11 @@ class MonsterController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'thumbnail' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
     }
 
     /**
